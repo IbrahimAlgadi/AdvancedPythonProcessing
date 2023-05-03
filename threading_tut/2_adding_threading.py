@@ -2,6 +2,7 @@ import time
 import threading
 
 
+# To Speedup This Section We Need Multiprocessing For Computation
 def calculate_sum_squares(n):
     sum_squares = 0
     for i in range(n):
@@ -46,12 +47,13 @@ def main():
         )
         # if you didnt call t.start it will not do anything
         t.start()
+        t.join()
         current_threads.append(t)
         # sleep_a_little(i)
 
-    # TODO: Block the program to wait for all the threads to finish
-    for i in range(len(current_threads)):
-        current_threads[i].join()
+    # # TODO: Block the program to wait for all the threads to finish
+    # for i in range(len(current_threads)):
+    #     current_threads[i].join()
 
     print("[*] Calculate sum of squares took: ", round(time.time() - sleep_start_time, 1))
 
