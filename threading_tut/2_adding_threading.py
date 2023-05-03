@@ -35,6 +35,7 @@ def main():
     # TODO: Block the program to wait for all the threads to finish
     for i in range(len(current_threads)):
         current_threads[i].join()
+
     print("[*] Calculate sum of squares took: ", round(time.time() - calc_start_time, 1))
 
     sleep_start_time = time.time()
