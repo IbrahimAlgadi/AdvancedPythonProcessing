@@ -24,7 +24,8 @@ def main():
         maximum_value = ((i + 1) * 1000_000)
         t = threading.Thread(
             target=calculate_sum_squares,
-            args=(maximum_value,)
+            args=(maximum_value,),
+            daemon=True
         )
         # if you didnt call t.start it will not do anything
         t.start()
@@ -43,17 +44,18 @@ def main():
     for i in range(1, 6):
         t = threading.Thread(
             target=sleep_a_little,
-            args=(i,)
+            args=(i,),
+            daemon=True
         )
         # if you didnt call t.start it will not do anything
         t.start()
-        t.join()
+        # t.join()
         current_threads.append(t)
         # sleep_a_little(i)
 
-    # # TODO: Block the program to wait for all the threads to finish
-    # for i in range(len(current_threads)):
-    #     current_threads[i].join()
+    # TODO: Block the program to wait for all the threads to finish
+    for i in range(len(current_threads)):
+        current_threads[i].join()
 
     print("[*] Calculate sum of squares took: ", round(time.time() - sleep_start_time, 1))
 
