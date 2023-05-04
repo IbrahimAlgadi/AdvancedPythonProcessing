@@ -13,7 +13,7 @@ class YahooFinancePriceScheduler(threading.Thread):
     def __init__(self, input_queue, output_queue, **kwargs):
         super(YahooFinancePriceScheduler, self).__init__(**kwargs)
         self._input_queue = input_queue
-        self._output_queue = output_queue
+        self._output_queues = [output_queue] if type(output_queue) != list else output_queue
         self.start()
 
     def run(self) -> None:
@@ -26,16 +26,16 @@ class YahooFinancePriceScheduler(threading.Thread):
                 break
             print("YAHOOO VAL: ", val)
             if val == 'DONE':
-                # if self._output_queue is not None:
-                #     self._output_queue.put('DONE')
+                for output_queue in self._output_queues:
+                    output_queue.put('DONE')
                 break
 
             yahoo_finance_worker = YahooFinanceWorker(symbol=val)
             price = 100  # yahoo_finance_worker.get_price()
             print(val, "\t\tPRICE: ", price)
-            if self._output_queue is not None:
+            for output_queue in self._output_queues:
                 output_value = [val, price, datetime.datetime.utcnow()]
-                self._output_queue.put(output_value)
+                output_queue.put(output_value)
             # TODO: So we dont spam we need to sleep
             time.sleep(5 * random.random())
 
