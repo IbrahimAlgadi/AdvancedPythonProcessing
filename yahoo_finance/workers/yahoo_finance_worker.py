@@ -8,21 +8,33 @@ import time
 import random
 
 
-class YahooFinanceWorker(threading.Thread):
+class YahooFinancePriceScheduler(threading.Thread):
+    def __init__(self, input_queue, **kwargs):
+        super(YahooFinancePriceScheduler, self).__init__(**kwargs)
+        self._input_queue = input_queue
+        self.start()
+
+    def run(self) -> None:
+        while True:
+            val = self._input_queue.get()
+            if val == 'DONE':
+                break
+
+            yahoo_finance_worker = YahooFinanceWorker(symbol=val)
+            price = yahoo_finance_worker.get_price()
+            print(val, "\t\tPRICE: ", price)
+            # TODO: So we dont spam we need to sleep
+            time.sleep(5 * random.random())
+
+
+class YahooFinanceWorker():
 
     def __init__(self, symbol, **kwargs):
         self._symbol = symbol
         self._url = f'https://finance.yahoo.com/quote/{self._symbol}'
-
         super(YahooFinanceWorker, self).__init__(**kwargs)
 
-        self.start()
-
-    def run(self) -> None:
-        # print()
-        # return
-        # TODO: So we dont spam we need to sleep
-        time.sleep(30 * random.random())
+    def get_price(self):
         ########################################
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")
@@ -38,7 +50,7 @@ class YahooFinanceWorker(threading.Thread):
                 by=By.XPATH,
                 value='//*[@id="quote-header-info"]/div[3]/div[1]/div/fin-streamer[1]'
             )[0].text
-            print(self._symbol, "\t\tPRICE: ", finance_price_value)
+            return float(finance_price_value)
         except Exception as e:
             print("Error: ", e)
             return

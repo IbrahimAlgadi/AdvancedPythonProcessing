@@ -1,6 +1,6 @@
 import time
 from multiprocessing import Queue
-from workers.yahoo_finance_worker import YahooFinanceWorker
+from workers.yahoo_finance_worker import YahooFinancePriceScheduler
 from workers.wiki_worker import WikiWorker
 
 """
@@ -16,28 +16,23 @@ def main():
     calc_start_time = time.time()
 
     wiki_worker = WikiWorker()
-    current_threads = []
+    yahoo_finance_price_scheduler_threads = []
+    yahoo_finance_price_scheduler = YahooFinancePriceScheduler(
+        input_queue=symbol_queue
+    )
+
+    yahoo_finance_price_scheduler_threads.append(yahoo_finance_price_scheduler)
     for symbol in wiki_worker.get_sp_500_companies():
-        # insert symbol to queue
-        # queues are thread safe
         symbol_queue.put(symbol)
 
-        # yahoo_finance_worker = YahooFinanceWorker(symbol=symbol)
-        # # yahoo_finance_worker.join()
-        # current_threads.append(yahoo_finance_worker)
-        # # print(current_threads)
-        # if len(current_threads) == 5:
-        #     # TODO: Block the program to wait for all the threads to finish
-        #     for i in range(len(current_threads)):
-        #         current_threads[i].join()
-        #     current_threads = []
+    # TODO: To Break Every Thread We Need to Put Many DONE so all
+    #       other threads stops
+    for i in range(len(yahoo_finance_price_scheduler_threads)):
+        symbol_queue.put('DONE')
 
     # TODO: Block the program to wait for all the threads to finish
-    # for i in range(len(current_threads)):
-    #     current_threads[i].join()
-
-    print(symbol_queue)
-    print(symbol_queue.get())
+    for i in range(len(yahoo_finance_price_scheduler_threads)):
+        yahoo_finance_price_scheduler_threads[i].join()
 
     print("[*] Extracting Time Took: ", round(time.time() - calc_start_time, 1))
 
