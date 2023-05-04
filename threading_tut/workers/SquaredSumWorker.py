@@ -5,6 +5,7 @@ class SquaredSumWorker(threading.Thread):
 
     def __init__(self, n, *args, **kwargs):
         self._n = n
+        self.daemon = True
         super(SquaredSumWorker, self).__init__(*args, **kwargs)
         # start the thread
         self.start()

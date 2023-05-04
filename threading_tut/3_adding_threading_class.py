@@ -9,7 +9,7 @@ def main():
     current_threads = []
     for i in range(5):
         maximum_value = ((i + 1) * 1000_000)
-        squared_sum_worker = SquaredSumWorker(n=maximum_value, daemon=True)
+        squared_sum_worker = SquaredSumWorker(n=maximum_value)
         current_threads.append(squared_sum_worker)
 
     # TODO: Block the program to wait for all the threads to finish
@@ -22,7 +22,7 @@ def main():
 
     current_threads = []
     for i in range(1, 6):
-        sleepy_worker = SleepyWorker(seconds=i, daemon=True)
+        sleepy_worker = SleepyWorker(seconds=i)
         current_threads.append(sleepy_worker)
 
     # TODO: Block the program to wait for all the threads to finish

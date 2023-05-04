@@ -6,6 +6,7 @@ class SleepyWorker(threading.Thread):
 
     def __init__(self, seconds, *args, **kwargs):
         self._seconds = seconds
+        self.daemon = True
         super(SleepyWorker, self).__init__(*args, **kwargs)
         self.start()
 
