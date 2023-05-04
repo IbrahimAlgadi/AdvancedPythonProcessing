@@ -50,7 +50,8 @@ class YahooFinanceWorker():
                 by=By.XPATH,
                 value='//*[@id="quote-header-info"]/div[3]/div[1]/div/fin-streamer[1]'
             )[0].text
-            return float(finance_price_value)
+            # if the number is 1,234 => replace , comma with ''
+            return float(finance_price_value.replace(',', ''))
         except Exception as e:
             print("Error: ", e)
             return
