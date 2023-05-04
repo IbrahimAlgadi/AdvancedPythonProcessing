@@ -8,11 +8,11 @@ class WikiWorker():
 
     @staticmethod
     def _extract_company_symbols(page_html):
-        soup = BeautifulSoup(page_html)
+        soup = BeautifulSoup(page_html, features="html.parser")
         table = soup.find(id='constituents')
         table_rows = table.find_all('tr')
 
-        for table_row in table_rows:
+        for table_row in table_rows[1:]:
             symbol = table_row.find('td').text.strip('\n')
             yield symbol
 
@@ -24,3 +24,14 @@ class WikiWorker():
             return []
 
         yield from self._extract_company_symbols(response.text)
+
+
+if __name__ == '__main__':
+    wiki_worker = WikiWorker()
+    symbols = []
+
+    for symbol in wiki_worker.get_sp_500_companies():
+        # print(symbol)
+        symbols.append(symbol)
+
+    print(len(symbols))
