@@ -20,7 +20,7 @@ class YahooFinancePriceScheduler(threading.Thread):
         while True:
             print("[*] Started Yahoo Thread ...")
             try:
-                val = self._input_queue.get(timeout=10)
+                val = self._input_queue.get(timeout=20)
             except Empty:
                 print("[*] Yahoo Finance Timeout ...")
                 break
