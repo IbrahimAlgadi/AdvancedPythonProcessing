@@ -3,9 +3,9 @@ import threading
 
 class SquaredSumWorker(threading.Thread):
 
-    def __init__(self, n, **kwargs):
+    def __init__(self, n, *args, **kwargs):
         self._n = n
-        super(SquaredSumWorker, self).__init__(**kwargs)
+        super(SquaredSumWorker, self).__init__(*args, **kwargs)
         # start the thread
         self.start()
 

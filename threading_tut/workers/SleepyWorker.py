@@ -4,9 +4,9 @@ import time
 
 class SleepyWorker(threading.Thread):
 
-    def __init__(self, seconds, **kwargs):
+    def __init__(self, seconds, *args, **kwargs):
         self._seconds = seconds
-        super(SleepyWorker, self).__init__(**kwargs)
+        super(SleepyWorker, self).__init__(*args, **kwargs)
         self.start()
 
     def _sleep_a_little(self):
