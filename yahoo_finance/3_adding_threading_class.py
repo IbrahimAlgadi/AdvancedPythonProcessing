@@ -39,8 +39,14 @@ def main():
         )
         postgres_scheduler_threads.append(postgres_scheduler)
 
+    symbol_counter = 0
     for symbol in wiki_worker.get_sp_500_companies():
         symbol_queue.put(symbol)
+        print(symbol)
+        symbol_counter += 1
+        if symbol_counter >= 4:
+            print("[*] Break")
+            break
 
     # TODO: Block the program to wait for all the threads to finish
     for th in [*yahoo_finance_price_scheduler_threads, *postgres_scheduler_threads]:

@@ -1,5 +1,6 @@
 import os
 import threading
+from queue import Empty
 from sqlalchemy import create_engine
 from sqlalchemy.sql import text
 
@@ -13,7 +14,12 @@ class PostgresMasterScheduler(threading.Thread):
     def run(self) -> None:
         while True:
             print("[*] Started Postgres Thread ...")
-            val = self._input_queue.get()
+            try:
+                val = self._input_queue.get(timeout=10)
+            except Empty:
+                print("Timeout reached in postgres scheduler")
+                break
+            print("POSTGRES VAL: ", val)
             if val == 'DONE':
                 break
             symbol, price, extracted_time = val
@@ -40,8 +46,9 @@ class PostgresWorker:
         self._PG_DB = os.environ.get("PG_DB", 'postgres')
         # POSTGRES CONNECTION
         conn_url = f"postgresql+psycopg2://{self._PG_USER}:{self._PG_PW}@{self._PG_HOST}:5432/{self._PG_DB}"
-        print(conn_url)
-        self._engine = create_engine(conn_url, echo=True, echo_pool="debug")
+        # print(conn_url)
+        self._engine = create_engine(conn_url)
+        # self._engine = create_engine(conn_url, echo=True, echo_pool="debug")
 
     def _create_insert_query(self):
         SQL = f"""
