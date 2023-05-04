@@ -9,9 +9,10 @@ import random
 
 
 class YahooFinancePriceScheduler(threading.Thread):
-    def __init__(self, input_queue, **kwargs):
+    def __init__(self, input_queue, output_queue, **kwargs):
         super(YahooFinancePriceScheduler, self).__init__(**kwargs)
         self._input_queue = input_queue
+        self._output_queue = output_queue
         self.start()
 
     def run(self) -> None:
@@ -23,6 +24,9 @@ class YahooFinancePriceScheduler(threading.Thread):
             yahoo_finance_worker = YahooFinanceWorker(symbol=val)
             price = yahoo_finance_worker.get_price()
             print(val, "\t\tPRICE: ", price)
+            if self._output_queue is not None:
+                output_value = [val, price, int(time.time())]
+                self._output_queue.put(output_value)
             # TODO: So we dont spam we need to sleep
             time.sleep(5 * random.random())
 
