@@ -30,9 +30,7 @@ def main():
         )
         yahoo_finance_price_scheduler_threads.append(yahoo_finance_price_scheduler)
 
-    """
-    TODO: Adding Postgres Scheduler Queue Subscribe and Publish
-    """
+    # TODO: Adding Postgres Scheduler Queue Subscribe and Publish
     postgres_scheduler_threads = []
     num_postgres_workers = 2
     for i in range(num_postgres_workers):
@@ -44,6 +42,10 @@ def main():
     for symbol in wiki_worker.get_sp_500_companies():
         symbol_queue.put(symbol)
 
+    # TODO: Block the program to wait for all the threads to finish
+    for th in [*yahoo_finance_price_scheduler_threads, *postgres_scheduler_threads]:
+        th.join()
+
     # TODO: To Break Every Thread We Need to Put Many DONE so all
     #       other threads stops
     for i in range(len(yahoo_finance_price_scheduler_threads)):
@@ -54,13 +56,9 @@ def main():
     for i in range(len(postgres_scheduler_threads)):
         postgres_queue.put('DONE')
 
-    # TODO: Block the program to wait for all the threads to finish
-    for i in range(len(yahoo_finance_price_scheduler_threads)):
-        yahoo_finance_price_scheduler_threads[i].join()
-
-    # TODO: Block the program to wait for all the threads to finish
-    for i in range(len(postgres_scheduler_threads)):
-        postgres_scheduler_threads[i].join()
+    # # TODO: Block the program to wait for all the threads to finish
+    # for i in range(len(postgres_scheduler_threads)):
+    #     postgres_scheduler_threads[i].join()
 
     print("[*] Extracting Time Took: ", round(time.time() - calc_start_time, 1))
 

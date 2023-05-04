@@ -6,16 +6,18 @@ from sqlalchemy.sql import text
 
 class PostgresMasterScheduler(threading.Thread):
     def __init__(self, input_queue, **kwargs):
-        super(PostgresMasterScheduler, self).__init__(**kwargs)
         self._input_queue = input_queue
+        super(PostgresMasterScheduler, self).__init__(**kwargs)
         self.start()
 
     def run(self) -> None:
         while True:
+            print("[*] Started Postgres Thread ...")
             val = self._input_queue.get()
             if val == 'DONE':
                 break
             symbol, price, extracted_time = val
+            print("[*] Insert Into DB: ", symbol, price, extracted_time)
             postgres_worker = PostgresWorker(
                 symbol=symbol,
                 price=price,
@@ -37,7 +39,9 @@ class PostgresWorker:
         self._PG_HOST = os.environ.get("PG_HOST", 'localhost')
         self._PG_DB = os.environ.get("PG_DB", 'postgres')
         # POSTGRES CONNECTION
-        self._engine = create_engine(f"postgresql://{self._PG_USER}:{self._PG_PW}@{self._PG_HOST}/{self._PG_DB}")
+        conn_url = f"postgresql+psycopg2://{self._PG_USER}:{self._PG_PW}@{self._PG_HOST}:5432/{self._PG_DB}"
+        print(conn_url)
+        self._engine = create_engine(conn_url, echo=True, echo_pool="debug")
 
     def _create_insert_query(self):
         SQL = f"""
@@ -48,14 +52,16 @@ INSERT INTO prices (symbol, price, extracted_time) VALUES (:symbol, :price, :ext
     def insert_into_db(self):
         insert_query = self._create_insert_query()
         with self._engine.connect() as conn:
+            print("[*] Connecting and Inserting Data...")
             conn.execute(
                 text(insert_query),
                 {
                     'symbol': self._symbol,
                     'price': self._price,
-                    'extracted_time': self._extracted_time,
+                    'extracted_time': str(self._extracted_time),
                 }
             )
+            conn.execute(text("COMMIT"))
 
 
 if __name__ == '__main__':

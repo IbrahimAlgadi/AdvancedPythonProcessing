@@ -4,7 +4,7 @@ from lxml import html
 # Import the required modules
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-import time
+import time, datetime
 import random
 
 
@@ -17,6 +17,7 @@ class YahooFinancePriceScheduler(threading.Thread):
 
     def run(self) -> None:
         while True:
+            print("[*] Started Yahoo Thread ...")
             val = self._input_queue.get()
             if val == 'DONE':
                 break
@@ -25,7 +26,7 @@ class YahooFinancePriceScheduler(threading.Thread):
             price = yahoo_finance_worker.get_price()
             print(val, "\t\tPRICE: ", price)
             if self._output_queue is not None:
-                output_value = [val, price, int(time.time())]
+                output_value = [val, price, datetime.datetime.utcnow()]
                 self._output_queue.put(output_value)
             # TODO: So we dont spam we need to sleep
             time.sleep(5 * random.random())

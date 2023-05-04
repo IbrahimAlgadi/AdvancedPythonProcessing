@@ -14,6 +14,7 @@ class WikiWorker():
 
         for table_row in table_rows[1:]:
             symbol = table_row.find('td').text.strip('\n')
+            # print("SYMBOL: ", symbol)
             yield symbol
 
     def get_sp_500_companies(self):
