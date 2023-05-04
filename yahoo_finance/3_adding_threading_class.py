@@ -17,11 +17,16 @@ def main():
 
     wiki_worker = WikiWorker()
     yahoo_finance_price_scheduler_threads = []
-    yahoo_finance_price_scheduler = YahooFinancePriceScheduler(
-        input_queue=symbol_queue
-    )
+    # TODO: Now we have 5 workers each one is
+    #   waiting for the queue to have a value and start
+    #   immediatly once it get the value from the queue
+    num_yahoo_finance_workers = 5
+    for i in range(num_yahoo_finance_workers):
+        yahoo_finance_price_scheduler = YahooFinancePriceScheduler(
+            input_queue=symbol_queue
+        )
+        yahoo_finance_price_scheduler_threads.append(yahoo_finance_price_scheduler)
 
-    yahoo_finance_price_scheduler_threads.append(yahoo_finance_price_scheduler)
     for symbol in wiki_worker.get_sp_500_companies():
         symbol_queue.put(symbol)
 
