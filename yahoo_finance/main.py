@@ -9,11 +9,11 @@ Adding Queue
 
 
 def main():
-    yaml_pipeline_executor = YamlPipelineExecutor(pipeline_location='pipelines/wiki_yahoo_scrapper_pipeline.yaml')
 
     calc_start_time = time.time()
 
-    yaml_pipeline_executor.process_pipeline()
+    yaml_pipeline_executor = YamlPipelineExecutor(pipeline_location='pipelines/wiki_yahoo_scrapper_pipeline.yaml')
+    yaml_pipeline_executor.start()
 
     print("[*] Extracting Time Took: ", round(time.time() - calc_start_time, 1))
 

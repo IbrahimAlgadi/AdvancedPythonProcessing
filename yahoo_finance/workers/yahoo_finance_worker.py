@@ -17,22 +17,20 @@ class YahooFinancePriceScheduler(threading.Thread):
 
     def run(self) -> None:
         while True:
-            print("[*] Started Yahoo Thread ...")
+            # print("[*] Started Yahoo Thread ...")
             try:
                 val = self._input_queue.get(timeout=20)
             except Empty:
                 print("[*] Yahoo Finance Timeout ...")
                 break
 
-            # print("YAHOOO VAL: ", val)
-            # if val == 'DONE':
-            #     for output_queue in self._output_queues:
-            #         output_queue.put('DONE')
-            #     break
+            if val == 'DONE':
+                print("[*] Postgres Worker Break")
+                break
 
             yahoo_finance_worker = YahooFinanceWorker(symbol=val)
             price = 100  # yahoo_finance_worker.get_price()
-            print(val, "\t\tPRICE: ", price)
+            # print(val, "\t\tPRICE: ", price)
             for output_queue in self._output_queues:
                 output_value = [val, price, datetime.datetime.utcnow()]
                 output_queue.put(output_value)

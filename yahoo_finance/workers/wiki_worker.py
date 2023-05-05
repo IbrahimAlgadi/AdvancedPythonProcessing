@@ -24,12 +24,8 @@ class WikiWorkerMasterScheduler(threading.Thread):
                     output_queue.put(symbol)
                 symbol_counter += 1
                 if symbol_counter >= 4:
-                    print("[*] Break")
+                    print("[*] Wiki Worker Break")
                     break
-        # print(self._output_queues)
-        # for output_queue in self._output_queues:
-        #     for i in range(20):
-        #         output_queue.put('DONE')
 
 
 class WikiWorker:
