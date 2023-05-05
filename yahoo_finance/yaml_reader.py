@@ -127,6 +127,11 @@ class YamlPipelineExecutor(threading.Thread):
             if total_workers_alive == 0:
                 break
 
+            queue_stats = []
+            for queue in self._queues:
+                queue_stats.append([queue, self._queues[queue].qsize()])
+            print("Queue Size: ", queue_stats)
+
             time.sleep(1)
 
 
