@@ -8,6 +8,7 @@ queues:
 workers:
   - name: WikiWorker
     description: This scraps raw wikipedia page and pulls out symbols
+    note: we only need one instance here, otherwise we are scrapping the same data again which is buggy
     location: workers.wiki_worker
     class: WikiWorkerMasterScheduler
     input_values:
