@@ -89,6 +89,7 @@ class YamlPipelineExecutor(threading.Thread):
 
         while True:
             total_workers_alive = 0
+            worker_stats = []
             # Monitor the queue if it is still running
             # when the wiki worker break from the run loop
             # then send DONE in the output queue targeting
@@ -116,9 +117,12 @@ class YamlPipelineExecutor(threading.Thread):
                                 self._queues[output_queue].put('DONE')
                     # delete that specific worker if it is not
                     # alive to stop tracking it
+
                     del self._workers[worker_name]
 
-            print(f"[*] TOTAL THREADS ALIVE {total_workers_alive}")
+                worker_stats.append([worker_name, total_worker_threads_alive])
+
+            print(f"[*] TOTAL THREADS ALIVE {worker_stats}")
 
             if total_workers_alive == 0:
                 break
