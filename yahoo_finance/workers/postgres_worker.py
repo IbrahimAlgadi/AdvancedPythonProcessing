@@ -6,7 +6,7 @@ from sqlalchemy.sql import text
 
 
 class PostgresMasterScheduler(threading.Thread):
-    def __init__(self, input_queue, **kwargs):
+    def __init__(self, input_queue, output_queue, **kwargs):
         self._input_queue = input_queue
         super(PostgresMasterScheduler, self).__init__(**kwargs)
         self.start()
@@ -72,11 +72,4 @@ INSERT INTO prices (symbol, price, extracted_time) VALUES (:symbol, :price, :ext
 
 
 if __name__ == '__main__':
-    # response = requests.get('https://finance.yahoo.com/quote/AAPL')
-    # print(response.text)
-    # lxml_parse = html.fromstring(response.text)
-    # print(lxml_parse)
-    # page_content = lxml_parse.xpath('/html/body/div[1]/div/div/div[1]/div/div[2]/div/div/div[6]/div/div/div/div[3]/div[1]/div/fin-streamer[1]/span')
-    # print(page_content)
-
     pass

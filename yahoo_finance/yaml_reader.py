@@ -22,13 +22,14 @@ class YamlPipelineExecutor:
         for queue in self._yaml_data['queues']:
             queue_name = queue['name']
             self._queues[queue_name] = Queue()
+
         print("[*] Done ...")
 
     def _initialize_workers(self):
         print("[*] Initialize Worker Classes ...")
         for worker in self._yaml_data['workers']:
             _WorkerClass = getattr(importlib.import_module(worker['location']), worker['class'])
-            print("[*] Worker Class: ", _WorkerClass.__name__)
+            # print("[*] Worker Class: ", _WorkerClass.__name__)
             input_queue = worker.get('input_queue')
             output_queues = worker.get('output_queues')
             worker_name = worker['name']
@@ -39,11 +40,16 @@ class YamlPipelineExecutor:
                 'output_queue': [self._queues[output_queue] for output_queue in
                                  output_queues] if output_queues is not None else None,
             }
+            # Add input_value params for wiki worker if its set
+            input_values = worker.get('input_values')
+            if input_values is not None:
+                init_params['input_values'] = input_values
+
             # TODO: Create Workers List
             self._workers[worker_name] = []
             for i in range(num_instances):
                 self._workers[worker_name].append(_WorkerClass(**init_params))
-                print("[*] Workers: ", self._workers)
+                # print("[*] Workers: ", self._workers)
         print("[*] Done ...")
 
     def _join_workers(self):
@@ -59,7 +65,7 @@ class YamlPipelineExecutor:
         # TODO: Then Initialize The Workers
         self._initialize_workers()
         # TODO: Then Join The Workers
-        # self._join_workers()
+        self._join_workers()
 
 
 if __name__ == '__main__':
