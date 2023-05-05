@@ -1,0 +1,30 @@
+queues:
+  - name: SymbolQueue
+    description: contains symbols to be scrapped fro yahoo finance
+
+  - name: PostgresUploadingQueue
+    description: contains data that needs to be uploaded to postgres
+
+workers:
+#  - name: WikiWorker
+#    description: This scraps raw wikipedia page and pulls out symbols
+#    location: workers.wiki_worker
+#    class: WikiWorker
+#    input_values:
+#      - "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+#    output_queses:
+#      - SymbolQueue
+
+  - name: YahooFinanceWorker
+    description: pulls price data for a specific stock symbol from yahoo finance
+    location: workers.yahoo_finance_worker
+    class: YahooFinancePriceScheduler
+    input_queue: SymbolQueue
+    output_queues:
+      - PostgresUploadingQueue
+
+  - name: PostgresWorker
+    description: take stock data and save in postgres
+    location: postgres_worker
+    class: PostgresMasterScheduler
+    input_queue: PostgresUploadingQueue
