@@ -13,22 +13,22 @@ class PostgresMasterScheduler(threading.Thread):
 
     def run(self) -> None:
         while True:
-            print("[*] Started Postgres Thread ...")
+            # print("[*] Started Postgres Thread ...")
             try:
                 val = self._input_queue.get(timeout=10)
             except Empty:
                 print("Timeout reached in postgres scheduler")
                 break
-            print("POSTGRES VAL: ", val)
+            # print("POSTGRES VAL: ", val)
             if val == 'DONE':
                 break
             symbol, price, extracted_time = val
-            print("[*] Insert Into DB: ", symbol, price, extracted_time)
             postgres_worker = PostgresWorker(
                 symbol=symbol,
                 price=price,
                 extracted_time=extracted_time,
             )
+            # print("[*] Insert Into DB: ", symbol, price, extracted_time)
             postgres_worker.insert_into_db()
 
 

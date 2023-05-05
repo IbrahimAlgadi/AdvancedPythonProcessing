@@ -1,5 +1,5 @@
 import threading
-# import time
+import time
 
 import requests
 from bs4 import BeautifulSoup
@@ -26,10 +26,10 @@ class WikiWorkerMasterScheduler(threading.Thread):
                 if symbol_counter >= 4:
                     print("[*] Break")
                     break
-        print(self._output_queues)
-        for output_queue in self._output_queues:
-            for i in range(20):
-                output_queue.put('DONE')
+        # print(self._output_queues)
+        # for output_queue in self._output_queues:
+        #     for i in range(20):
+        #         output_queue.put('DONE')
 
 
 class WikiWorker:
@@ -48,17 +48,17 @@ class WikiWorker:
             yield symbol
 
     def get_sp_500_companies(self):
-        # time.sleep(2)
-        # for i in range(5):
-        #     yield 'AML'
+        time.sleep(3)
+        for i in range(5):
+            yield 'AML'
 
-        response = requests.get(self._url)
-
-        if response.status_code != 200:
-            print("[*] Coudn't get entries ...")
-            return []
-
-        yield from self._extract_company_symbols(response.text)
+        # response = requests.get(self._url)
+        #
+        # if response.status_code != 200:
+        #     print("[*] Coudn't get entries ...")
+        #     return []
+        #
+        # yield from self._extract_company_symbols(response.text)
 
 
 if __name__ == '__main__':

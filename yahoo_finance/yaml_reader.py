@@ -1,15 +1,19 @@
 import importlib
+import threading
 
 import yaml
 from multiprocessing import Queue
 
 
-class YamlPipelineExecutor:
+class YamlPipelineExecutor(threading.Thread):
 
-    def __init__(self, pipeline_location):
+    def __init__(self, pipeline_location, **kwargs):
         self._pipeline_location = pipeline_location
         self._queues = {}
         self._workers = {}
+
+        super(YamlPipelineExecutor, self).__init__(**kwargs)
+        self.start()
 
     def _load_pipeline(self):
         print("[*] Loading Pipeline ...")
@@ -66,6 +70,12 @@ class YamlPipelineExecutor:
         self._initialize_workers()
         # TODO: Then Join The Workers
         self._join_workers()
+
+    def run(self):
+        self.process_pipeline()
+
+        while True:
+            pass
 
 
 if __name__ == '__main__':

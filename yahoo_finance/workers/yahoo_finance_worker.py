@@ -1,12 +1,11 @@
 import threading
-# import requests
-# from lxml import html
-# Import the required modules
+from queue import Empty
+import time
+import datetime
+import random
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from queue import Empty
-import time, datetime
-import random
 
 
 class YahooFinancePriceScheduler(threading.Thread):
@@ -24,11 +23,12 @@ class YahooFinancePriceScheduler(threading.Thread):
             except Empty:
                 print("[*] Yahoo Finance Timeout ...")
                 break
-            print("YAHOOO VAL: ", val)
-            if val == 'DONE':
-                for output_queue in self._output_queues:
-                    output_queue.put('DONE')
-                break
+
+            # print("YAHOOO VAL: ", val)
+            # if val == 'DONE':
+            #     for output_queue in self._output_queues:
+            #         output_queue.put('DONE')
+            #     break
 
             yahoo_finance_worker = YahooFinanceWorker(symbol=val)
             price = 100  # yahoo_finance_worker.get_price()
