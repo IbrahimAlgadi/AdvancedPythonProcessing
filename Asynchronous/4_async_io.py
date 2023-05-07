@@ -10,7 +10,7 @@ async def async_sleep(n):
     n = max(2, n)
     for i in range(1, n):
         yield i
-        await asyncio.sleep(n)
+        await asyncio.sleep(i)
     print(f"[*] After Sleep {n}")
 
 
