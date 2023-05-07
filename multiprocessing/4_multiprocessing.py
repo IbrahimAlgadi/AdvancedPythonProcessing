@@ -5,17 +5,18 @@ from functools import partial
 import time
 
 
-def square(y, x):
-    return x**y
+def square(y, to_add, x):
+    return x**y+to_add
 
 
 num_processes = 4
 comparison_list = [1, 2, 3]
 power = 3
+to_add = 2
 num_cpu_to_use = max(1, cpu_count() - 1)
 # print(num_cpu_to_use)
 
-partial_function = partial(square, power)
+partial_function = partial(square, power, to_add)
 
 if __name__ == '__main__':
     freeze_support()
