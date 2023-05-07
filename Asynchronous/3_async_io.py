@@ -25,6 +25,9 @@ async def main():
     then we need to use timeout to regain control
     over the system
 
+    the use of wait for will block other functions
+    from execution in the same concurrent block
+
     """
     start = time.time()
 
