@@ -12,6 +12,15 @@ comparison_list = [1, 2, 3]
 
 if __name__ == '__main__':
     # We are using more than one Core in the program
+    """
+    
+    Each and every process executes in a new core
+    with its own GIL and python interpreter
+    
+    -> Network IO (threading)
+    -> CPU utilization (Multiprocessing)
+    
+    """
     freeze_support()
 
     start_time = time.time()
