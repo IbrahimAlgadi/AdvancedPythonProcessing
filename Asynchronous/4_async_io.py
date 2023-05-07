@@ -22,6 +22,9 @@ async def main():
     """
     Asynchronous For Loops
 
+    Can give us control back to event loop
+    to execute something else then continue
+    the fore loop, doing something else
     """
     start = time.time()
     async for k in async_sleep(5):
