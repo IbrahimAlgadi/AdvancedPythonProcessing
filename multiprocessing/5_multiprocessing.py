@@ -21,6 +21,7 @@ print(prepared_list)
 if __name__ == '__main__':
     freeze_support()
 
+
     start_time = time.time()
 
     with Pool(num_cpu_to_use) as ap_pool:
