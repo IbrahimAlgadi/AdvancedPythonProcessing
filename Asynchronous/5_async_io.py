@@ -27,6 +27,13 @@ async def main():
         'https://medium.com',
     ]
 
+    """
+    Event if you try to wrap requests to async function
+    and run tasks.
+    
+    the requests is blocking and it never gives control
+    back to event loop.
+    """
     start_time = time.time()
     sync_text_response = []
     for url in urls:
