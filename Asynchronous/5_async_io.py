@@ -6,8 +6,13 @@ import aiohttp
 
 
 async def get_url_response(url):
+    # context manager no worry to close something
+    # it will be closed after with is done
+    # creating session context manager
     async with aiohttp.ClientSession() as session:
+        # using session context manager
         async with session.get(url) as response:
+            # return response back
             return await response.text()
 
 
